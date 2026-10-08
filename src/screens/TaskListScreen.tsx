@@ -91,7 +91,13 @@ export default function TaskListScreen() {
 				contentContainerStyle={styles.listContent}
 			/>
 
-			<FAB icon="plus" style={styles.fab} onPress={() => {}} />
+			<FAB
+				icon="plus"
+				style={styles.fab}
+				onPress={() => {
+					router.push("/create-task");
+				}}
+			/>
 		</Surface>
 	);
 }

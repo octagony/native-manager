@@ -16,3 +16,15 @@ export const sortTasks = (
 	const comparator = taskComparators[sortBy];
 	return [...tasks].sort(comparator);
 };
+
+export const formatDate = (date: Date | null): string => {
+	return date
+		? date.toLocaleString(undefined, {
+				year: "numeric",
+				month: "short",
+				day: "numeric",
+				hour: "2-digit",
+				minute: "2-digit",
+			})
+		: "";
+};

@@ -1,3 +1,6 @@
+// PLATFORMS CONSTANTS
+export const PLATFORM_ANDROID = "android";
+
 // THEME CONSTANTS
 export const THEME_STATE_LIGHT = "light";
 export const THEME_STATE_DARK = "dark";
@@ -33,3 +36,8 @@ export const TASK_HISTORY_STATUS_DEFAULT_MESSAGE = "Status changed to";
 export const TASK_SORT_TYPE_DATE_ADDED = "dateAdded";
 export const TASK_SORT_TYPE_DUE_DATE = "dueDate";
 export const TASK_SORT_TYPE_STATUS = "status";
+
+// DATETIME MODES
+export const DATE_TIME_MODE_DATE = "date";
+export const DATE_TIME_MODE_TIME = "time";
+export const DATE_TIME_MODE_DATETIME = "datetime";

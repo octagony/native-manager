@@ -1,6 +1,6 @@
 import { ITaskCardComponentProps } from "@/interfaces/ITask.interface";
 import { StyleSheet } from "react-native";
-import { Card, Title, Paragraph, Chip } from "react-native-paper";
+import { Card, Chip, Text } from "react-native-paper";
 
 export const TaskCard = ({ task, onPress }: ITaskCardComponentProps) => {
 	const getStatusColor = (status: string) => {
@@ -28,7 +28,7 @@ export const TaskCard = ({ task, onPress }: ITaskCardComponentProps) => {
 				/>
 
 				<Card.Content style={styles.description}>
-					{task.description}
+					<Text>{task.description}</Text>
 				</Card.Content>
 
 				<Chip

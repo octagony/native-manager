@@ -82,16 +82,16 @@ export interface IHistoryTaskLog {
 	description: string;
 }
 
+export type TTaskToAdd = Omit<
+	ITask,
+	"id" | "history" | "syncStatus" | "createdAt" | "updatedAt" | "status"
+>;
+
 // STORE
 export interface ITaskStore {
 	tasks: ITask[];
 	isLoading: boolean;
-	addTask: (
-		taskData: Omit<
-			ITask,
-			"id" | "history" | "syncStatus" | "createdAt" | "updatedAt"
-		>,
-	) => void;
+	addTask: (taskData: TTaskToAdd) => void;
 	updateTaskStatus: (id: string, status: TTaskStatus) => void;
 	deleteTask: (id: string) => void;
 }

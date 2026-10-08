@@ -6,7 +6,7 @@ export const useTaskStore = create<ITaskStore>((set) => ({
 	isLoading: false,
 
 	addTask: (taskData) => {
-		const newTask: ITask = {
+		const newTask = {
 			...taskData,
 			id: Date.now().toString(),
 			status: "New",
@@ -23,7 +23,7 @@ export const useTaskStore = create<ITaskStore>((set) => ({
 			],
 		};
 
-		set((state) => ({ tasks: [...state.tasks, newTask] }));
+		set((state) => ({ tasks: [...state.tasks, newTask as ITask] }));
 	},
 
 	updateTaskStatus: (id, status) => {
