@@ -28,3 +28,8 @@ export const TASK_SYNCED = "Synced";
 
 export const TASK_HISTORY_DEFAULT_MESSAGE = "Task created";
 export const TASK_HISTORY_STATUS_DEFAULT_MESSAGE = "Status changed to";
+
+// TASKS SORTS TYPES
+export const TASK_SORT_TYPE_DATE_ADDED = "dateAdded";
+export const TASK_SORT_TYPE_DUE_DATE = "dueDate";
+export const TASK_SORT_TYPE_STATUS = "status";

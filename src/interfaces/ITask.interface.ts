@@ -15,6 +15,9 @@ import {
 	TASK_DELETED,
 	TASK_SYNCED,
 	TASK_HISTORY_CREATED,
+	TASK_SORT_TYPE_DATE_ADDED,
+	TASK_SORT_TYPE_DUE_DATE,
+	TASK_SORT_TYPE_STATUS,
 } from "@/utils/constants";
 
 export type TTaskAttachment =
@@ -98,3 +101,9 @@ export interface ITaskCardComponentProps {
 	task: ITask;
 	onPress: () => void;
 }
+
+// SCREENS
+export type TTasksSortOption =
+	| typeof TASK_SORT_TYPE_DATE_ADDED
+	| typeof TASK_SORT_TYPE_DUE_DATE
+	| typeof TASK_SORT_TYPE_STATUS;
