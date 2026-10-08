@@ -87,6 +87,11 @@ export type TTaskToAdd = Omit<
 	"id" | "history" | "syncStatus" | "createdAt" | "updatedAt" | "status"
 >;
 
+export interface IAttachmentPreviewComponentProps {
+	attachment: ITaskAttachment;
+	onRemove: (id: string) => void;
+}
+
 // STORE
 export interface ITaskStore {
 	tasks: ITask[];

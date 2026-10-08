@@ -1,10 +1,10 @@
-// src/screens/CreateTaskScreen.tsx
-import React, { useState } from "react";
+import { useState } from "react";
 import {
 	StyleSheet,
 	ScrollView,
 	KeyboardAvoidingView,
 	Platform,
+	View,
 } from "react-native";
 import {
 	Appbar,
@@ -19,6 +19,9 @@ import {
 import { useRouter } from "expo-router";
 import { useTaskStore } from "../store/taskStore";
 import { DateTimeInput } from "../components/DateTimeInput";
+import { AttachmentPreview } from "@/components/AttachmentPreview";
+import { ITaskAttachment } from "@/interfaces/ITask.interface";
+import { deleteAttachment, pickImage } from "@/services/attachmentService";
 
 export default function CreateTaskScreen() {
 	const router = useRouter();
@@ -29,6 +32,7 @@ export default function CreateTaskScreen() {
 	const [description, setDescription] = useState("");
 	const [address, setAddress] = useState("");
 	const [dueDate, setDueDate] = useState<Date | null>(null);
+	const [attachments, setAttachments] = useState<ITaskAttachment[]>([]);
 
 	const [errors, setErrors] = useState({
 		title: "",
@@ -74,6 +78,21 @@ export default function CreateTaskScreen() {
 		return isValid;
 	};
 
+	const handleAddAttachment = async () => {
+		const attachment = await pickImage();
+		if (attachment) {
+			setAttachments((prev) => [...prev, attachment]);
+		}
+	};
+
+	const handleRemoveAttachment = async (id: string) => {
+		const attachment = attachments.find((a) => a.id === id);
+		if (attachment) {
+			await deleteAttachment(attachment.uri);
+			setAttachments((prev) => prev.filter((a) => a.id !== id));
+		}
+	};
+
 	const handleSave = () => {
 		if (!validate()) {
 			return;
@@ -84,7 +103,7 @@ export default function CreateTaskScreen() {
 			description: description.trim(),
 			dueDate: dueDate!.getTime(),
 			location: { address: address.trim() },
-			attachments: [],
+			attachments,
 		});
 
 		router.back();
@@ -180,6 +199,36 @@ export default function CreateTaskScreen() {
 						minimumDate={new Date()}
 					/>
 
+					<View style={styles.attachmentsSection}>
+						<Text
+							variant="titleMedium"
+							style={styles.attachmentsTitle}
+						>
+							Attachments
+						</Text>
+
+						{attachments.length > 0 && (
+							<View style={styles.attachmentsGrid}>
+								{attachments.map((attachment) => (
+									<AttachmentPreview
+										key={attachment.id}
+										attachment={attachment}
+										onRemove={handleRemoveAttachment}
+									/>
+								))}
+							</View>
+						)}
+
+						<Button
+							mode="outlined"
+							onPress={handleAddAttachment}
+							icon="image-plus"
+							style={styles.addButton}
+						>
+							Add Photo
+						</Button>
+					</View>
+
 					<Button
 						mode="contained"
 						onPress={handleSave}
@@ -219,5 +268,20 @@ const styles = StyleSheet.create({
 	},
 	saveButton: {
 		marginTop: 8,
+	},
+	attachmentsSection: {
+		marginTop: 16,
+		marginBottom: 24,
+	},
+	attachmentsTitle: {
+		marginBottom: 12,
+	},
+	attachmentsGrid: {
+		flexDirection: "row",
+		flexWrap: "wrap",
+		marginBottom: 12,
+	},
+	addButton: {
+		alignSelf: "flex-start",
 	},
 });
