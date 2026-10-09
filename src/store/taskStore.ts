@@ -9,13 +9,18 @@ import {
 	TASK_HISTORY_STATUS_UPDATED,
 	TASK_STATUS_NEW,
 } from "@/utils/constants";
+import {
+	cancelAllNotificationsForTask,
+	rescheduleTaskNotification,
+	scheduleTaskNotification,
+} from "@/services/notificationService";
 
 export const useTaskStore = create<ITaskStore>()(
-	persistService((set) => ({
+	persistService((set, get) => ({
 		tasks: [],
 		isLoading: true,
 
-		addTask: (taskData) => {
+		addTask: async (taskData) => {
 			const newTask: ITask = {
 				...taskData,
 				id: Date.now().toString(),
@@ -34,9 +39,10 @@ export const useTaskStore = create<ITaskStore>()(
 			};
 
 			set((state) => ({ tasks: [...state.tasks, newTask] }));
+			await scheduleTaskNotification(newTask);
 		},
 
-		updateTaskStatus: (id, status) => {
+		updateTaskStatus: async (id, status) => {
 			set((state) => ({
 				tasks: state.tasks.map((task) => {
 					if (task.id === id) {
@@ -59,9 +65,15 @@ export const useTaskStore = create<ITaskStore>()(
 					return task;
 				}),
 			}));
+
+			const updatedTask = get().tasks.find((t) => t.id === id);
+			if (updatedTask) {
+				await rescheduleTaskNotification(updatedTask);
+			}
 		},
 
-		deleteTask: (id) => {
+		deleteTask: async (id) => {
+			await cancelAllNotificationsForTask(id);
 			set((state) => ({
 				tasks: state.tasks.filter((task) => task.id !== id),
 			}));

@@ -44,3 +44,6 @@ export const DATE_TIME_MODE_DATETIME = "datetime";
 
 // SERVICE STORAGE KEY
 export const SERVICE_STORAGE_KEY = "@NativeTasker:tasks";
+
+// NOTIFICATIONS KEY
+export const NOTIFICATION_IDS_KEY = "@NativeTasker:notificationIds";
