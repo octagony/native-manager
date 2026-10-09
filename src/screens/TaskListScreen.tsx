@@ -85,7 +85,12 @@ export default function TaskListScreen() {
 				data={sortedTasks}
 				keyExtractor={(item) => item.id}
 				renderItem={({ item }) => (
-					<TaskCard task={item} onPress={() => {}} />
+					<TaskCard
+						task={item}
+						onPress={() => {
+							router.push(`/task-detail/${item.id}`);
+						}}
+					/>
 				)}
 				ListEmptyComponent={<EmptyState />}
 				contentContainerStyle={styles.listContent}

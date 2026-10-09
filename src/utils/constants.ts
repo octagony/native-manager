@@ -41,3 +41,6 @@ export const TASK_SORT_TYPE_STATUS = "status";
 export const DATE_TIME_MODE_DATE = "date";
 export const DATE_TIME_MODE_TIME = "time";
 export const DATE_TIME_MODE_DATETIME = "datetime";
+
+// SERVICE STORAGE KEY
+export const SERVICE_STORAGE_KEY = "@NativeTasker:tasks";
