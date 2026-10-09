@@ -15,6 +15,7 @@ import {
 	HelperText,
 	useTheme,
 	MD3Theme,
+	Menu,
 } from "react-native-paper";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { useTaskStore } from "../store/taskStore";
@@ -22,6 +23,8 @@ import { DateTimeInput } from "../components/DateTimeInput";
 import { AttachmentPreview } from "@/components/AttachmentPreview";
 import { ITaskAttachment } from "@/interfaces/ITask.interface";
 import { deleteAttachment, pickImage } from "@/services/attachmentService";
+import { IPredefinedLocation } from "@/interfaces/ILocation.interface";
+import { PREDEFINED_LOCATIONS } from "@/utils/helpers";
 
 export default function CreateTaskScreen() {
 	const router = useRouter();
@@ -40,6 +43,9 @@ export default function CreateTaskScreen() {
 	const [address, setAddress] = useState("");
 	const [dueDate, setDueDate] = useState<Date | null>(null);
 	const [attachments, setAttachments] = useState<ITaskAttachment[]>([]);
+	const [selectedLocation, setSelectedLocation] =
+		useState<IPredefinedLocation | null>(null);
+	const [locationMenuVisible, setLocationMenuVisible] = useState(false);
 
 	const [errors, setErrors] = useState({
 		title: "",
@@ -55,8 +61,26 @@ export default function CreateTaskScreen() {
 			setAddress(existingTask.location.address);
 			setDueDate(new Date(existingTask.dueDate));
 			setAttachments(existingTask.attachments);
+
+			if (existingTask.location.locationId) {
+				const loc = PREDEFINED_LOCATIONS.find(
+					(l) => l.id === existingTask.location.locationId,
+				);
+				if (loc) setSelectedLocation(loc);
+			}
 		}
 	}, [existingTask]);
+
+	const handleSelectLocation = (location: IPredefinedLocation) => {
+		setSelectedLocation(location);
+		setAddress(location.address);
+		setLocationMenuVisible(false);
+	};
+
+	const handleClearLocation = () => {
+		setSelectedLocation(null);
+		setAddress("");
+	};
 
 	const validate = (): boolean => {
 		const newErrors = {
@@ -119,15 +143,18 @@ export default function CreateTaskScreen() {
 			title: title.trim(),
 			description: description.trim(),
 			dueDate: dueDate!.getTime(),
-			location: { address: address.trim() },
+			location: {
+				address: address.trim(),
+				latitude: selectedLocation?.latitude,
+				longitude: selectedLocation?.longitude,
+				locationId: selectedLocation?.id,
+			},
 			attachments,
 		};
 
-		if (isEditMode) {
+		if (isEditMode && taskId) {
 			updateTask(taskId, taskData);
-		}
-
-		if (!isEditMode) {
+		} else {
 			addTask(taskData);
 		}
 
@@ -193,6 +220,53 @@ export default function CreateTaskScreen() {
 						{errors.description}
 					</HelperText>
 
+					<View style={styles.locationSection}>
+						<Text variant="titleMedium" style={styles.sectionTitle}>
+							Location *
+						</Text>
+
+						<Menu
+							visible={locationMenuVisible}
+							onDismiss={() => setLocationMenuVisible(false)}
+							anchor={
+								<Button
+									mode="outlined"
+									onPress={() => setLocationMenuVisible(true)}
+									icon="map-marker"
+									style={styles.locationButton}
+									contentStyle={styles.locationButtonContent}
+								>
+									{selectedLocation
+										? selectedLocation.name
+										: "Select a location"}
+								</Button>
+							}
+						>
+							{PREDEFINED_LOCATIONS.map((location) => (
+								<Menu.Item
+									key={location.id}
+									onPress={() =>
+										handleSelectLocation(location)
+									}
+									title={location.name}
+									leadingIcon="map-marker"
+								/>
+							))}
+						</Menu>
+
+						{selectedLocation && (
+							<Button
+								mode="text"
+								onPress={handleClearLocation}
+								icon="close-circle"
+								compact
+								style={styles.clearButton}
+							>
+								Clear selection
+							</Button>
+						)}
+					</View>
+
 					<TextInput
 						label="Location Address *"
 						value={address}
@@ -208,6 +282,10 @@ export default function CreateTaskScreen() {
 					/>
 					<HelperText type="error" visible={!!errors.address}>
 						{errors.address}
+					</HelperText>
+					<HelperText type="info" visible={true}>
+						💡 Address auto-fills when selecting a location, but can
+						be edited manually
 					</HelperText>
 
 					<DateTimeInput
@@ -267,38 +345,23 @@ export default function CreateTaskScreen() {
 }
 
 const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-	},
-	keyboardView: {
-		flex: 1,
-	},
-	scrollView: {
-		flex: 1,
-	},
-	scrollContent: {
-		padding: 16,
-		paddingBottom: 40,
-	},
-	input: {
-		marginBottom: 4,
-	},
-	attachmentsSection: {
-		marginTop: 16,
-		marginBottom: 24,
-	},
-	attachmentsTitle: {
-		marginBottom: 12,
-	},
+	container: { flex: 1 },
+	keyboardView: { flex: 1 },
+	scrollView: { flex: 1 },
+	scrollContent: { padding: 16, paddingBottom: 40 },
+	input: { marginBottom: 4 },
+	sectionTitle: { marginBottom: 12, fontWeight: "bold" },
+	locationSection: { marginTop: 8, marginBottom: 16 },
+	locationButton: { justifyContent: "flex-start" },
+	locationButtonContent: { justifyContent: "flex-start" },
+	clearButton: { alignSelf: "flex-start", marginTop: 8 },
+	attachmentsSection: { marginTop: 16, marginBottom: 24 },
+	attachmentsTitle: { marginBottom: 12 },
 	attachmentsGrid: {
 		flexDirection: "row",
 		flexWrap: "wrap",
 		marginBottom: 12,
 	},
-	addButton: {
-		alignSelf: "flex-start",
-	},
-	saveButton: {
-		marginTop: 8,
-	},
+	addButton: { alignSelf: "flex-start" },
+	saveButton: { marginTop: 8 },
 });

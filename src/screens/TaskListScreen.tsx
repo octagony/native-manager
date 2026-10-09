@@ -97,6 +97,12 @@ export default function TaskListScreen() {
 			/>
 
 			<FAB
+				icon="map"
+				style={[styles.fab, styles.fabMap]}
+				onPress={() => router.push("/map")}
+			/>
+
+			<FAB
 				icon="plus"
 				style={styles.fab}
 				onPress={() => {
@@ -120,5 +126,8 @@ const styles = StyleSheet.create({
 		margin: 16,
 		right: 0,
 		bottom: 0,
+	},
+	fabMap: {
+		bottom: 80,
 	},
 });

@@ -61,6 +61,9 @@ export interface ITask {
 export interface ITaskLocation {
 	address: string;
 	coordinates?: ITaskCoordinates;
+	latitude?: number;
+	longitude?: number;
+	locationId?: string;
 }
 
 export interface ITaskAttachment {

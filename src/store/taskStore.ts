@@ -48,6 +48,10 @@ export const useTaskStore = create<ITaskStore>()(
 			set((state) => ({
 				tasks: state.tasks.map((task) => {
 					if (task.id === id) {
+						const attachmentsChanged =
+							JSON.stringify(task.attachments) !==
+							JSON.stringify(taskData.attachments);
+
 						const updatedTask: ITask = {
 							...task,
 							...taskData,

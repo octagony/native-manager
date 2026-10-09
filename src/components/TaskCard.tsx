@@ -1,23 +1,9 @@
 import { ITaskCardComponentProps } from "@/interfaces/ITask.interface";
+import { getTaskStatusColor } from "@/utils/helpers";
 import { StyleSheet } from "react-native";
 import { Card, Chip, Text } from "react-native-paper";
 
 export const TaskCard = ({ task, onPress }: ITaskCardComponentProps) => {
-	const getStatusColor = (status: string) => {
-		switch (status) {
-			case "New":
-				return "#2196F3";
-			case "In Progress":
-				return "#FF9800";
-			case "Completed":
-				return "#4CAF50";
-			case "Cancelled":
-				return "#F44336";
-			default:
-				return "#9E9E9E";
-		}
-	};
-
 	return (
 		<Card style={styles.card} onPress={onPress}>
 			<Card.Content>
@@ -52,7 +38,7 @@ export const TaskCard = ({ task, onPress }: ITaskCardComponentProps) => {
 				<Chip
 					style={[
 						styles.statusChip,
-						{ backgroundColor: getStatusColor(task.status) },
+						{ backgroundColor: getTaskStatusColor(task.status) },
 					]}
 					textStyle={styles.statusChipText}
 				>

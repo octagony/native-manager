@@ -90,6 +90,15 @@ export default function TaskDetailScreen() {
 					<Menu.Item
 						onPress={() => {
 							setMenuVisible(false);
+							router.push(`/task-history/${task.id}`);
+						}}
+						title="View History"
+						leadingIcon="history"
+					/>
+					<Divider />
+					<Menu.Item
+						onPress={() => {
+							setMenuVisible(false);
 							router.push(`/create-task?taskId=${task.id}`);
 						}}
 						title="Edit Task"
@@ -183,34 +192,6 @@ export default function TaskDetailScreen() {
 						</View>
 					</View>
 				)}
-
-				<View style={styles.section}>
-					<Text variant="titleMedium" style={styles.sectionTitle}>
-						History
-					</Text>
-					{task.history.map((log) => (
-						<View key={log.id} style={styles.historyItem}>
-							<Text
-								variant="bodySmall"
-								style={styles.historyTime}
-							>
-								{formatDate(new Date(log.timestamp))}
-							</Text>
-							<Text
-								variant="bodyMedium"
-								style={styles.historyAction}
-							>
-								{log.action}
-							</Text>
-							<Text
-								variant="bodySmall"
-								style={styles.historyDescription}
-							>
-								{log.description}
-							</Text>
-						</View>
-					))}
-				</View>
 			</ScrollView>
 
 			<Portal>
@@ -300,22 +281,5 @@ const styles = StyleSheet.create({
 		borderRadius: 8,
 		marginRight: 8,
 		marginBottom: 8,
-	},
-	historyItem: {
-		marginBottom: 16,
-		paddingLeft: 16,
-		borderLeftWidth: 2,
-		borderLeftColor: "#E0E0E0",
-	},
-	historyTime: {
-		opacity: 0.6,
-		marginBottom: 4,
-	},
-	historyAction: {
-		fontWeight: "bold",
-		marginBottom: 4,
-	},
-	historyDescription: {
-		opacity: 0.8,
 	},
 });
