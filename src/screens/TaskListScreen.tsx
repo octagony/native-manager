@@ -25,6 +25,8 @@ export default function TaskListScreen() {
 	const [menuVisible, setMenuVisible] = useState(false);
 	const sortedTasks = sortTasks(tasks, sortBy);
 	const theme = useTheme() as MD3Theme;
+	const syncWithServer = useTaskStore((state) => state.syncWithServer);
+	const loadFromServer = useTaskStore((state) => state.loadFromServer);
 
 	return (
 		<Surface
@@ -36,6 +38,8 @@ export default function TaskListScreen() {
 		>
 			<Appbar.Header>
 				<Appbar.Content title="My Tasks" />
+				<Appbar.Action icon="cloud-download" onPress={loadFromServer} />
+				<Appbar.Action icon="cloud-upload" onPress={syncWithServer} />
 				<Menu
 					visible={menuVisible}
 					onDismiss={() => setMenuVisible(false)}

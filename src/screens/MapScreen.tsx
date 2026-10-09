@@ -12,6 +12,7 @@ import {
 } from "react-native-paper";
 import { useRouter } from "expo-router";
 import { useTaskStore } from "@/store/taskStore";
+import { EmptyState } from "@/components/EmptyState";
 
 export default function MapScreen() {
 	const router = useRouter();
@@ -53,15 +54,11 @@ export default function MapScreen() {
 			</Appbar.Header>
 
 			{tasksWithLocation.length === 0 ? (
-				<Surface style={styles.empty}>
-					<Text variant="headlineSmall" style={styles.emptyText}>
-						No tasks with locations
-					</Text>
-					<Text variant="bodyMedium" style={styles.emptySubtext}>
-						Select a predefined location when creating a task to see
-						it on the map
-					</Text>
-				</Surface>
+				<EmptyState
+					title="No tasks with locations"
+					description="Select a predefined location when creating a task to see
+				it on the map"
+				/>
 			) : (
 				<List.Section style={styles.list}>
 					<Text variant="titleMedium" style={styles.listTitle}>

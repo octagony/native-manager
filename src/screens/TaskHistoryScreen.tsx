@@ -1,4 +1,3 @@
-// src/screens/TaskHistoryScreen.tsx
 import { useMemo } from "react";
 import { StyleSheet, ScrollView, View } from "react-native";
 import {
@@ -118,28 +117,79 @@ export default function TaskHistoryScreen() {
 }
 
 const styles = StyleSheet.create({
-	container: { flex: 1 },
-	notFound: { flex: 1, justifyContent: "center", alignItems: "center" },
-	scrollView: { flex: 1 },
-	scrollContent: { padding: 16, paddingBottom: 40 },
-	header: { marginBottom: 24 },
-	title: { marginBottom: 8 },
-	subtitle: { opacity: 0.6 },
-	timeline: { marginTop: 16 },
-	historyItem: { flexDirection: "row", marginBottom: 24 },
-	timelineLine: { width: 40, alignItems: "center" },
-	timelineDot: { width: 12, height: 12, borderRadius: 6, marginTop: 4 },
-	line: { width: 2, flex: 1, marginTop: 4 },
-	historyContent: { flex: 1, paddingLeft: 8 },
+	container: {
+		flex: 1,
+	},
+	notFound: {
+		flex: 1,
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	scrollView: {
+		flex: 1,
+	},
+	scrollContent: {
+		padding: 16,
+		paddingBottom: 40,
+	},
+	header: {
+		marginBottom: 24,
+	},
+	title: {
+		marginBottom: 8,
+	},
+	subtitle: {
+		opacity: 0.6,
+	},
+	timeline: {
+		marginTop: 16,
+	},
+	historyItem: {
+		flexDirection: "row",
+		marginBottom: 24,
+	},
+	timelineLine: {
+		width: 40,
+		alignItems: "center",
+	},
+	timelineDot: {
+		width: 12,
+		height: 12,
+		borderRadius: 6,
+		marginTop: 4,
+	},
+	line: {
+		width: 2,
+		flex: 1,
+		marginTop: 4,
+	},
+	historyContent: {
+		flex: 1,
+		paddingLeft: 8,
+	},
 	historyHeader: {
 		flexDirection: "row",
 		justifyContent: "space-between",
 		alignItems: "center",
 		marginBottom: 8,
 	},
-	actionButton: { height: 32, borderRadius: 16 },
-	actionButtonContent: { height: 32, paddingHorizontal: 12 },
-	actionButtonLabel: { fontSize: 12, fontWeight: "bold", lineHeight: 16 },
-	timestamp: { opacity: 0.6 },
-	description: { lineHeight: 20 },
+	actionButton: {
+		height: 32,
+		borderRadius: 16,
+	},
+	actionButtonContent: {
+		height: 32,
+		paddingHorizontal: 12,
+	},
+	actionButtonLabel: {
+		fontSize: 12,
+		fontWeight: "bold",
+		lineHeight: 16,
+	},
+	timestamp: {
+		opacity: 0.6,
+	},
+	description: {
+		lineHeight: 20,
+	},
 });

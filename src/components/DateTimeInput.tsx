@@ -13,7 +13,6 @@ import { formatDate } from "@/utils/helpers";
 import {
 	IDateTimeInputComponentProps,
 	TDateTimeCurrentMode,
-	TDateTimeModeTypes,
 } from "@/interfaces/IDateTime.interface";
 
 export const DateTimeInput = ({

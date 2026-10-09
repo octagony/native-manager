@@ -107,6 +107,8 @@ export interface ITaskStore {
 	updateTask: (id: string, taskData: TTaskToEdit) => Promise<void>;
 	updateTaskStatus: (id: string, status: TTaskStatus) => Promise<void>;
 	deleteTask: (id: string) => Promise<void>;
+	syncWithServer: () => Promise<void>;
+	loadFromServer: () => Promise<void>;
 }
 
 // COMPONENTS

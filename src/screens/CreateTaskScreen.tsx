@@ -66,7 +66,9 @@ export default function CreateTaskScreen() {
 				const loc = PREDEFINED_LOCATIONS.find(
 					(l) => l.id === existingTask.location.locationId,
 				);
-				if (loc) setSelectedLocation(loc);
+				if (loc) {
+					setSelectedLocation(loc);
+				}
 			}
 		}
 	}, [existingTask]);
@@ -154,7 +156,9 @@ export default function CreateTaskScreen() {
 
 		if (isEditMode && taskId) {
 			updateTask(taskId, taskData);
-		} else {
+		}
+
+		if (!isEditMode) {
 			addTask(taskData);
 		}
 
@@ -345,23 +349,56 @@ export default function CreateTaskScreen() {
 }
 
 const styles = StyleSheet.create({
-	container: { flex: 1 },
-	keyboardView: { flex: 1 },
-	scrollView: { flex: 1 },
-	scrollContent: { padding: 16, paddingBottom: 40 },
-	input: { marginBottom: 4 },
-	sectionTitle: { marginBottom: 12, fontWeight: "bold" },
-	locationSection: { marginTop: 8, marginBottom: 16 },
-	locationButton: { justifyContent: "flex-start" },
-	locationButtonContent: { justifyContent: "flex-start" },
-	clearButton: { alignSelf: "flex-start", marginTop: 8 },
-	attachmentsSection: { marginTop: 16, marginBottom: 24 },
-	attachmentsTitle: { marginBottom: 12 },
+	container: {
+		flex: 1,
+	},
+	keyboardView: {
+		flex: 1,
+	},
+	scrollView: {
+		flex: 1,
+	},
+	scrollContent: {
+		padding: 16,
+		paddingBottom: 40,
+	},
+	input: {
+		marginBottom: 4,
+	},
+	sectionTitle: {
+		marginBottom: 12,
+		fontWeight: "bold",
+	},
+	locationSection: {
+		marginTop: 8,
+		marginBottom: 16,
+	},
+	locationButton: {
+		justifyContent: "flex-start",
+	},
+	locationButtonContent: {
+		justifyContent: "flex-start",
+	},
+	clearButton: {
+		alignSelf: "flex-start",
+		marginTop: 8,
+	},
+	attachmentsSection: {
+		marginTop: 16,
+		marginBottom: 24,
+	},
+	attachmentsTitle: {
+		marginBottom: 12,
+	},
 	attachmentsGrid: {
 		flexDirection: "row",
 		flexWrap: "wrap",
 		marginBottom: 12,
 	},
-	addButton: { alignSelf: "flex-start" },
-	saveButton: { marginTop: 8 },
+	addButton: {
+		alignSelf: "flex-start",
+	},
+	saveButton: {
+		marginTop: 8,
+	},
 });

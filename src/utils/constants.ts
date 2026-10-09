@@ -48,3 +48,6 @@ export const SERVICE_STORAGE_KEY = "@NativeTasker:tasks";
 
 // NOTIFICATIONS KEY
 export const NOTIFICATION_IDS_KEY = "@NativeTasker:notificationIds";
+
+// THEME KEY
+export const THEME_KEY = "@NativeTasker:theme";
