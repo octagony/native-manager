@@ -1,10 +1,12 @@
 import { create } from "zustand";
-import { ITask, ITaskStore } from "@/interfaces/ITask.interface";
+import { ITask, ITaskStore, TTaskToAdd } from "@/interfaces/ITask.interface";
 import { persistService } from "@/services/persistService";
 import {
 	SYNC_STATUS_PENDING,
 	TASK_HISTORY_CREATED,
 	TASK_HISTORY_DEFAULT_MESSAGE,
+	TASK_HISTORY_EDITED,
+	TASK_HISTORY_EDITED_DEFAULT_MESSAGE,
 	TASK_HISTORY_STATUS_DEFAULT_MESSAGE,
 	TASK_HISTORY_STATUS_UPDATED,
 	TASK_STATUS_NEW,
@@ -40,6 +42,38 @@ export const useTaskStore = create<ITaskStore>()(
 
 			set((state) => ({ tasks: [...state.tasks, newTask] }));
 			await scheduleTaskNotification(newTask);
+		},
+
+		updateTask: async (id, taskData) => {
+			set((state) => ({
+				tasks: state.tasks.map((task) => {
+					if (task.id === id) {
+						const updatedTask: ITask = {
+							...task,
+							...taskData,
+							updatedAt: Date.now(),
+							syncStatus: SYNC_STATUS_PENDING,
+							history: [
+								...task.history,
+								{
+									id: Date.now().toString(),
+									timestamp: Date.now(),
+									action: TASK_HISTORY_EDITED,
+									description:
+										TASK_HISTORY_EDITED_DEFAULT_MESSAGE,
+								},
+							],
+						};
+						return updatedTask;
+					}
+					return task;
+				}),
+			}));
+
+			const updatedTask = get().tasks.find((t) => t.id === id);
+			if (updatedTask) {
+				await rescheduleTaskNotification(updatedTask);
+			}
 		},
 
 		updateTaskStatus: async (id, status) => {

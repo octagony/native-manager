@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
 	StyleSheet,
 	ScrollView,
@@ -16,7 +16,7 @@ import {
 	useTheme,
 	MD3Theme,
 } from "react-native-paper";
-import { useRouter } from "expo-router";
+import { useRouter, useLocalSearchParams } from "expo-router";
 import { useTaskStore } from "../store/taskStore";
 import { DateTimeInput } from "../components/DateTimeInput";
 import { AttachmentPreview } from "@/components/AttachmentPreview";
@@ -25,8 +25,15 @@ import { deleteAttachment, pickImage } from "@/services/attachmentService";
 
 export default function CreateTaskScreen() {
 	const router = useRouter();
+	const { taskId } = useLocalSearchParams<{ taskId?: string }>();
+	const isEditMode = !!taskId;
+
+	const tasks = useTaskStore((state) => state.tasks);
 	const addTask = useTaskStore((state) => state.addTask);
+	const updateTask = useTaskStore((state) => state.updateTask);
 	const theme = useTheme() as MD3Theme;
+
+	const existingTask = taskId ? tasks.find((t) => t.id === taskId) : null;
 
 	const [title, setTitle] = useState("");
 	const [description, setDescription] = useState("");
@@ -40,6 +47,16 @@ export default function CreateTaskScreen() {
 		address: "",
 		dueDate: "",
 	});
+
+	useEffect(() => {
+		if (existingTask) {
+			setTitle(existingTask.title);
+			setDescription(existingTask.description);
+			setAddress(existingTask.location.address);
+			setDueDate(new Date(existingTask.dueDate));
+			setAttachments(existingTask.attachments);
+		}
+	}, [existingTask]);
 
 	const validate = (): boolean => {
 		const newErrors = {
@@ -98,13 +115,21 @@ export default function CreateTaskScreen() {
 			return;
 		}
 
-		addTask({
+		const taskData = {
 			title: title.trim(),
 			description: description.trim(),
 			dueDate: dueDate!.getTime(),
 			location: { address: address.trim() },
 			attachments,
-		});
+		};
+
+		if (isEditMode) {
+			updateTask(taskId, taskData);
+		}
+
+		if (!isEditMode) {
+			addTask(taskData);
+		}
 
 		router.back();
 	};
@@ -119,7 +144,9 @@ export default function CreateTaskScreen() {
 		>
 			<Appbar.Header>
 				<Appbar.BackAction onPress={() => router.back()} />
-				<Appbar.Content title="Create Task" />
+				<Appbar.Content
+					title={isEditMode ? "Edit Task" : "Create Task"}
+				/>
 			</Appbar.Header>
 
 			<KeyboardAvoidingView
@@ -231,7 +258,7 @@ export default function CreateTaskScreen() {
 						style={styles.saveButton}
 						icon="content-save"
 					>
-						Save Task
+						{isEditMode ? "Update Task" : "Save Task"}
 					</Button>
 				</ScrollView>
 			</KeyboardAvoidingView>
@@ -256,15 +283,6 @@ const styles = StyleSheet.create({
 	input: {
 		marginBottom: 4,
 	},
-	hint: {
-		marginTop: 16,
-		marginBottom: 24,
-		opacity: 0.6,
-		textAlign: "center",
-	},
-	saveButton: {
-		marginTop: 8,
-	},
 	attachmentsSection: {
 		marginTop: 16,
 		marginBottom: 24,
@@ -279,5 +297,8 @@ const styles = StyleSheet.create({
 	},
 	addButton: {
 		alignSelf: "flex-start",
+	},
+	saveButton: {
+		marginTop: 8,
 	},
 });

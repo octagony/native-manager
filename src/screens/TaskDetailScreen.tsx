@@ -4,17 +4,25 @@ import {
 	Appbar,
 	Text,
 	Surface,
+	Button,
 	Menu,
 	Divider,
 	useTheme,
 	MD3Theme,
 	Chip,
 	IconButton,
+	Dialog,
+	Portal,
 } from "react-native-paper";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { useTaskStore } from "@/store/taskStore";
-import { formatDate, getTaskStatusColor } from "@/utils/helpers";
+import {
+	formatDate,
+	getTaskStatusColor,
+	STATUS_OPTIONS,
+} from "@/utils/helpers";
 import { NotFoundTask } from "@/components/NotFoundTask";
+import { TTaskStatus } from "@/interfaces/ITask.interface";
 
 export default function TaskDetailScreen() {
 	const router = useRouter();
@@ -29,17 +37,27 @@ export default function TaskDetailScreen() {
 	const theme = useTheme() as MD3Theme;
 
 	const [menuVisible, setMenuVisible] = useState(false);
+	const [deleteDialogVisible, setDeleteDialogVisible] = useState(false);
 
-	if (!task) {
-		return <NotFoundTask />;
-	}
+	const handleStatusChange = (newStatus: TTaskStatus) => {
+		if (!task) {
+			return;
+		}
+
+		updateTaskStatus(task.id, newStatus);
+		setMenuVisible(false);
+	};
 
 	const handleDelete = () => {
+		if (!task) {
+			return;
+		}
 		deleteTask(task.id);
+		setDeleteDialogVisible(false);
 		router.back();
 	};
 
-	return (
+	return task ? (
 		<Surface
 			style={[
 				styles.container,
@@ -60,41 +78,29 @@ export default function TaskDetailScreen() {
 						/>
 					}
 				>
+					{STATUS_OPTIONS.map((option) => (
+						<Menu.Item
+							key={option.status}
+							onPress={() => handleStatusChange(option.status)}
+							title={`Mark as ${option.status}`}
+							leadingIcon={option.icon}
+							disabled={task.status === option.status}
+						/>
+					))}
 					<Menu.Item
 						onPress={() => {
-							updateTaskStatus(task.id, "New");
 							setMenuVisible(false);
+							router.push(`/create-task?taskId=${task.id}`);
 						}}
-						title="Mark as New"
-						leadingIcon="plus-circle"
-					/>
-					<Menu.Item
-						onPress={() => {
-							updateTaskStatus(task.id, "In Progress");
-							setMenuVisible(false);
-						}}
-						title="Mark as In Progress"
-						leadingIcon="progress-clock"
-					/>
-					<Menu.Item
-						onPress={() => {
-							updateTaskStatus(task.id, "Completed");
-							setMenuVisible(false);
-						}}
-						title="Mark as Completed"
-						leadingIcon="check-circle"
-					/>
-					<Menu.Item
-						onPress={() => {
-							updateTaskStatus(task.id, "Cancelled");
-							setMenuVisible(false);
-						}}
-						title="Mark as Cancelled"
-						leadingIcon="close-circle"
+						title="Edit Task"
+						leadingIcon="pencil"
 					/>
 					<Divider />
 					<Menu.Item
-						onPress={handleDelete}
+						onPress={() => {
+							setMenuVisible(false);
+							setDeleteDialogVisible(true);
+						}}
 						title="Delete Task"
 						leadingIcon="delete"
 						titleStyle={{ color: theme.colors.error }}
@@ -138,7 +144,6 @@ export default function TaskDetailScreen() {
 					<Text variant="titleMedium" style={styles.sectionTitle}>
 						Details
 					</Text>
-
 					<View style={styles.detailRow}>
 						<IconButton
 							icon="calendar-clock"
@@ -149,7 +154,6 @@ export default function TaskDetailScreen() {
 							Due: {formatDate(new Date(task.dueDate))}
 						</Text>
 					</View>
-
 					<View style={styles.detailRow}>
 						<IconButton
 							icon="map-marker"
@@ -208,7 +212,35 @@ export default function TaskDetailScreen() {
 					))}
 				</View>
 			</ScrollView>
+
+			<Portal>
+				<Dialog
+					visible={deleteDialogVisible}
+					onDismiss={() => setDeleteDialogVisible(false)}
+				>
+					<Dialog.Title>Delete Task</Dialog.Title>
+					<Dialog.Content>
+						<Text>
+							Are you sure you want to delete "{task.title}"? This
+							action cannot be undone.
+						</Text>
+					</Dialog.Content>
+					<Dialog.Actions>
+						<Button onPress={() => setDeleteDialogVisible(false)}>
+							Cancel
+						</Button>
+						<Button
+							onPress={handleDelete}
+							textColor={theme.colors.error}
+						>
+							Delete
+						</Button>
+					</Dialog.Actions>
+				</Dialog>
+			</Portal>
 		</Surface>
+	) : (
+		<NotFoundTask />
 	);
 }
 

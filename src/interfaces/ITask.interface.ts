@@ -87,6 +87,10 @@ export type TTaskToAdd = Omit<
 	"id" | "history" | "syncStatus" | "createdAt" | "updatedAt" | "status"
 >;
 
+export type TTaskToEdit = Partial<
+	Omit<ITask, "id" | "history" | "syncStatus" | "createdAt">
+>;
+
 export interface IAttachmentPreviewComponentProps {
 	attachment: ITaskAttachment;
 	onRemove: (id: string) => void;
@@ -96,9 +100,10 @@ export interface IAttachmentPreviewComponentProps {
 export interface ITaskStore {
 	tasks: ITask[];
 	isLoading: boolean;
-	addTask: (taskData: TTaskToAdd) => void;
-	updateTaskStatus: (id: string, status: TTaskStatus) => void;
-	deleteTask: (id: string) => void;
+	addTask: (taskData: TTaskToAdd) => Promise<void>;
+	updateTask: (id: string, taskData: TTaskToEdit) => Promise<void>;
+	updateTaskStatus: (id: string, status: TTaskStatus) => Promise<void>;
+	deleteTask: (id: string) => Promise<void>;
 }
 
 // COMPONENTS

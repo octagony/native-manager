@@ -56,3 +56,10 @@ export const getTaskStatusColor = (status: TTaskStatus) => {
 			return theme.colors.onSurfaceVariant;
 	}
 };
+
+export const STATUS_OPTIONS: { status: TTaskStatus; icon: string }[] = [
+	{ status: TASK_STATUS_NEW, icon: "plus-circle" },
+	{ status: TASK_STATUS_IN_PROGRESS, icon: "progress-clock" },
+	{ status: TASK_STATUS_COMPLETED, icon: "check-circle" },
+	{ status: TASK_STATUS_CANCELLED, icon: "close-circle" },
+];
