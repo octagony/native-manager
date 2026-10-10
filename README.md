@@ -72,3 +72,5 @@ Open `/src/services/apiService.ts` and change `API_BASE_URL` variable for your e
 - Refactoring components and pages
 - Code quality assessments
 - Implementation of functions for attaching files to a task and displaying pages for maps
+
+**Candidate Code:** CR-PD-8492

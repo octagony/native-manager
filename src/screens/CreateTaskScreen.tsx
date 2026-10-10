@@ -200,7 +200,6 @@ export default function CreateTaskScreen() {
 						mode="outlined"
 						style={styles.input}
 						error={!!errors.title}
-						right={<TextInput.Icon icon="check" color="green" />}
 					/>
 					<HelperText type="error" visible={!!errors.title}>
 						{errors.title}

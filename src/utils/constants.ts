@@ -51,3 +51,6 @@ export const NOTIFICATION_IDS_KEY = "@NativeTasker:notificationIds";
 
 // THEME KEY
 export const THEME_KEY = "@NativeTasker:theme";
+
+// CANDIDATE CODE
+export const CANDIDATE_CODE = "CR-PD-8492";

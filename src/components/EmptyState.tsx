@@ -16,7 +16,7 @@ export const EmptyState = ({
 		<Surface
 			style={[
 				styles.container,
-				{ backgroundColor: theme.colors.surface },
+				{ backgroundColor: theme.colors.background },
 			]}
 			elevation={0}
 		>

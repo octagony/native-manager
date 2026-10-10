@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { StyleSheet, FlatList } from "react-native";
+import { StyleSheet, FlatList, View, Text } from "react-native";
 import {
 	Surface,
 	Appbar,
@@ -16,6 +16,7 @@ import { useThemeContext } from "../hooks/useThemeContext";
 import { TTasksSortOption } from "@/interfaces/ITask.interface";
 import { sortTasks } from "@/utils/helpers";
 import { EmptyState } from "@/components/EmptyState";
+import { CANDIDATE_CODE } from "@/utils/constants";
 
 export default function TaskListScreen() {
 	const router = useRouter();
@@ -100,6 +101,12 @@ export default function TaskListScreen() {
 				contentContainerStyle={styles.listContent}
 			/>
 
+			<View style={styles.footer}>
+				<Text style={styles.footerText}>
+					Candidate Code: {CANDIDATE_CODE}
+				</Text>
+			</View>
+
 			<FAB
 				icon="map"
 				style={[styles.fab, styles.fabMap]}
@@ -133,5 +140,17 @@ const styles = StyleSheet.create({
 	},
 	fabMap: {
 		bottom: 80,
+	},
+	footer: {
+		paddingVertical: 24,
+		alignItems: "center",
+		borderTopWidth: 1,
+		borderTopColor: "rgba(128, 128, 128, 0.2)",
+		marginTop: 16,
+	},
+	footerText: {
+		color: "#6B7280",
+		opacity: 0.5,
+		fontWeight: "500",
 	},
 });

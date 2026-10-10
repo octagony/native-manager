@@ -14,6 +14,7 @@ Notifications.setNotificationHandler({
 });
 
 const REMINDER_MINUTES_BEFORE = 30;
+const DEMO_MODE_DELAY_SECONDS = 30;
 
 export const requestNotificationPermissions = async (): Promise<boolean> => {
 	if (!Device.isDevice) {
@@ -50,37 +51,50 @@ export const scheduleTaskNotification = async (
 
 	const reminderTime = task.dueDate - REMINDER_MINUTES_BEFORE * 60 * 1000;
 	const now = Date.now();
+	const isDemoMode = reminderTime < now;
 
-	if (reminderTime < now) {
+	// DEMO MODE
+	if (isDemoMode) {
+		console.log(
+			`[DEMO NOTIFICATION] notification for task "${task.title}"`,
+		);
+
 		try {
 			const notificationId =
 				await Notifications.scheduleNotificationAsync({
 					content: {
 						title: `Task Reminder: ${task.title}`,
-						body: `Due date was ${new Date(task.dueDate).toLocaleTimeString()}`,
+						body: `Demo notification - due at ${new Date(task.dueDate).toLocaleTimeString()} at ${task.location.address}`,
 						data: { taskId: task.id },
 						sound: "default",
 					},
 					trigger: {
 						type: Notifications.SchedulableTriggerInputTypes
 							.TIME_INTERVAL,
-						seconds: 30,
+						seconds: DEMO_MODE_DELAY_SECONDS,
 						repeats: false,
 					},
 				});
 
+			console.log(
+				`[DEMO NOTIFICATION] Demo notification scheduled with ID: ${notificationId}`,
+			);
 			return notificationId;
 		} catch (error) {
-			console.error("Notification scheduling error:", error);
+			console.error(
+				"[DEMO NOTIFICATION] Demo notification scheduling error:",
+				error,
+			);
 			return null;
 		}
 	}
 
+	// STANDARD MODE
 	try {
 		const secondsUntilReminder = Math.floor((reminderTime - now) / 1000);
 		const notificationId = await Notifications.scheduleNotificationAsync({
 			content: {
-				title: `⏰ Task Reminder: ${task.title}`,
+				title: `Task Reminder: ${task.title}`,
 				body: `Due in 30 minutes at ${task.location.address}`,
 				data: { taskId: task.id },
 				sound: "default",
